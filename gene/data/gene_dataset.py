@@ -8,14 +8,14 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 class GeneDataset(Dataset):
-  def __init__(self, train):
+  def __init__(self, train, dim):
     if train == True:
       print("Prepare trainset...", end='   ')
-      self.data, _ = self.prepare_data(1)
+      self.data, _ = self.prepare_data(dim)
       self.len = 2865
     else:
       print("Prepare testset...", end='   ')
-      _, self.data = self.prepare_data(1)
+      _, self.data = self.prepare_data(dim)
       self.len = 325
     print("[finished]")
 
@@ -26,7 +26,7 @@ class GeneDataset(Dataset):
     return self.len
 
 
-  def prepare_data(self, dimension):
+  def prepare_data(self, dim):
     raw_data_file = open("./data/splice.data", 'r')
     EIs = []
     IEs = []
@@ -43,26 +43,37 @@ class GeneDataset(Dataset):
         break
       gene_value = []
       data = []
-      if dimension == 1:
-        for i in range(39, 99):
-          gene_value.append(ord(read_data[i]))
-        tensor_value = torch.tensor(gene_value, dtype=torch.float)
-        tensor_value = tensor_value / 255
-        data.append(tensor_value)
+      tensor_value = []
+      # zero pading 00AT...TA00, 1x60 -> 1x64
+      gene_value.append(0)
+      gene_value.append(0)
+      for i in range(39, 99):
+        gene_value.append(ord(read_data[i]))
+      gene_value.append(0)
+      gene_value.append(0)
 
-        # value 0(EI) 1(IE) 2(N)
-        label = read_data.split(',')[0]
-        if label == 'EI':
-          data.append(0)
-          EIs.append(data)
-        elif label == 'IE':
-          data.append(1)
-          IEs.append(data)
-        elif label == 'N':
-          data.append(2)
-          Ns.append(data)
-      elif dimension == 2: # remained for conv2d...
-        pass
+      if dim == 2: # remained for conv2d...
+        temp_value = []
+        for i in range(0, 8):
+          temp = gene_value[i*8:(i*8)+8]
+          temp_value.append(temp)
+      tensor_value.append(temp_value)
+      tensor_value = torch.tensor(tensor_value, dtype=torch.float)
+      tensor_value = tensor_value / 255
+      data.append(tensor_value)
+
+      # value 0(EI) 1(IE) 2(N)
+      label = read_data.split(',')[0]
+      if label == 'EI':
+        data.append(torch.tensor(0))
+        EIs.append(data)
+      elif label == 'IE':
+        data.append(torch.tensor(1))
+        IEs.append(data)
+      elif label == 'N':
+        data.append(torch.tensor(2))
+        Ns.append(data)
+
     raw_data_file.close()
 
     trainset += EIs[ :EI_split]
@@ -81,13 +92,14 @@ if __name__ == '__main__':
   import torch
   import torchvision
   import torchvision.transforms as transforms
-  trainset = GeneDataset(train=True)
-  testset = GeneDataset(train=False)
+  trainset = GeneDataset(train=True, dim=2)
+  testset = GeneDataset(train=False, dim=2)
 
   train_loader = DataLoader(dataset=trainset,
                             batch_size=1,
                             shuffle=True,
                             num_workers=2)
+  print(trainset[0])
   for i, data in enumerate(train_loader):
     gene_code, label = data
-    print(gene_code.size())
+    #print(gene_code.size())

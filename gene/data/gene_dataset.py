@@ -44,6 +44,7 @@ class GeneDataset(Dataset):
       gene_value = []
       data = []
       tensor_value = []
+
       # zero pading 00AT...TA00, 1x60 -> 1x64
       gene_value.append(0)
       gene_value.append(0)
@@ -52,12 +53,15 @@ class GeneDataset(Dataset):
       gene_value.append(0)
       gene_value.append(0)
 
-      if dim == 2: # remained for conv2d...
+      if dim == 1:
+        tensor_value = gene_value
+      elif dim == 2: # remained for conv2d...
         temp_value = []
         for i in range(0, 8):
           temp = gene_value[i*8:(i*8)+8]
           temp_value.append(temp)
-      tensor_value.append(temp_value)
+        tensor_value.append(temp_value)
+
       tensor_value = torch.tensor(tensor_value, dtype=torch.float)
       tensor_value = tensor_value / 255
       data.append(tensor_value)

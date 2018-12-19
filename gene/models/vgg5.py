@@ -8,13 +8,13 @@ class Net(nn.Module):
     self.b1 = nn.BatchNorm2d(16)
     self.c2 = nn.Conv2d(16, 16, kernel_size=3, padding=1)
     self.b2 = nn.BatchNorm2d(16)
-    self.p1 = nn.MaxPool2d(kernel_size = 2, stride=2)
+    self.p1 = nn.AvgPool2d(kernel_size = 2, stride=2)
 
     self.c3 = nn.Conv2d(16, 32, kernel_size=3, padding=1)
     self.b3 = nn.BatchNorm2d(32)
     self.c4 = nn.Conv2d(32, 32, kernel_size=3, padding=1)
     self.b4 = nn.BatchNorm2d(32)
-    self.p2 = nn.MaxPool2d(kernel_size = 2, stride=2)
+    self.p2 = nn.AvgPool2d(kernel_size = 2, stride=2)
 
     self.relu = nn.ReLU()
     self.linear = nn.Linear(32*4, 3)

@@ -10,10 +10,12 @@ import numpy as np
 from data import gene_dataset as gd
 
 # select models
-from models import basic_NN as NN
-from models import vgg
+from models import NN2
+from models import NN3
+from models import vgg3
+from models import vgg5
 
-batch_size = 128
+batch_size = 256
 trainset = gd.GeneDataset(train=True, dim=2)
 testset = gd.GeneDataset(train=False, dim=2)
 
@@ -24,24 +26,34 @@ test_loader = torch.utils.data.DataLoader(dataset=testset,
     batch_size=batch_size, shuffle=False, num_workers=2)
 
 
-# GPU
+# cuda
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
 
 classes = ('EI', 'IE', 'N')
 
 # set model
-net = vgg.Net()
+net = vgg3.Net()
 if torch.cuda.is_available():
   net.cuda()
 
-loss_function = torch.nn.CrossEntropyLoss().cuda()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-epochs = 400
+loss_function = torch.nn.CrossEntropyLoss().cuda()  # cuda
+learning_rate = 0.01
+optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9,
+    weight_decay=1e-4)
 best_performacne = {'epoch':0, 'accuracy':0}
 
 # Training
-for epoch in range(epochs):
+for epoch in range(0, 600):
+  if epoch < 100:
+    learning_rate = 0.01
+  elif epoch < 300:
+    learning_rate = 0.005
+  else:
+    learning_rate = 0.001
+  for params in optimizer.param_groups:
+    params['lr'] = learning_rate
+
   running_loss = 0.0
   total_batch = len(trainset) // batch_size
 

@@ -7,6 +7,7 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 
+
 class GeneDataset(Dataset):
   def __init__(self, train, dim):
     if train == True:
@@ -19,11 +20,23 @@ class GeneDataset(Dataset):
       self.len = 325
     print("[finished]")
 
+
   def __getitem__(self, index):
     return self.data[index]
 
+
   def __len__(self):
     return self.len
+
+
+  def augment_data(self):
+    # D/N/S/R Augmentation
+    # D : A, G, or T
+    # N : A, G, C, or T
+    # S : C or G
+    # R : A or G
+    for i in range(0, self.len):
+      pass
 
 
   def prepare_data(self, dim):
@@ -45,11 +58,21 @@ class GeneDataset(Dataset):
       data = []
       tensor_value = []
 
-      # zero pading 00AT...TA00, 1x60 -> 1x64
+      # zero pading 00AT...TA00, 1x60 -> 1x64 (8x8 for CNN)
       gene_value.append(0)
       gene_value.append(0)
       for i in range(39, 99):
-        gene_value.append(ord(read_data[i]))
+        if read_data[i] == 'A':
+          gene_value.append(60)
+        elif read_data[i] == 'T':
+          gene_value.append(120)
+        elif read_data[i] == 'G':
+          gene_value.append(180)
+        elif read_data[i] == 'C':
+          gene_value.append(240)
+        else: # for D/N/S/R
+          gene_value.append(20)
+          #gene_value.append(ord(read_data[i]))
       gene_value.append(0)
       gene_value.append(0)
 
@@ -98,7 +121,6 @@ if __name__ == '__main__':
   import torchvision.transforms as transforms
   trainset = GeneDataset(train=True, dim=2)
   testset = GeneDataset(train=False, dim=2)
-
   train_loader = DataLoader(dataset=trainset,
                             batch_size=1,
                             shuffle=True,

@@ -15,7 +15,7 @@ from models import NN3
 from models import vgg3
 from models import vgg5
 
-batch_size = 256
+batch_size = 191
 trainset = gd.GeneDataset(train=True, dim=2)
 testset = gd.GeneDataset(train=False, dim=2)
 
@@ -36,8 +36,10 @@ classes = ('EI', 'IE', 'N')
 net = vgg3.Net()
 if torch.cuda.is_available():
   net.cuda()
+  loss_function = torch.nn.CrossEntropyLoss().cuda()  # cuda
+else:
+  loss_function = torch.nn.CrossEntropyLoss()
 
-loss_function = torch.nn.CrossEntropyLoss().cuda()  # cuda
 learning_rate = 0.01
 optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9,
     weight_decay=1e-4)

@@ -16,8 +16,8 @@ from models import vgg3
 from models import vgg5
 
 batch_size = 191
-trainset = gd.GeneDataset(train=True, dim=2)
-testset = gd.GeneDataset(train=False, dim=2)
+trainset = gd.GeneDataset(train=True, dim=2, classic=False)
+testset = gd.GeneDataset(train=False, dim=2, classic=False)
 
 train_loader = torch.utils.data.DataLoader(dataset=trainset,
     batch_size=batch_size, shuffle=True, num_workers=2)

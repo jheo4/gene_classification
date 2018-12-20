@@ -62,27 +62,33 @@ I implement a dataset manager. It provides testset and trainset as 1-dim tensors
 The testset is about 10% of each class. This manager splits the data for testset and trainset: EI(687/80), IE(688/80), N(1490/165). The total number of data is 3190(2865 to train/325 to test)
 
 ## Model Description
+### KNN
+This is the baseline for comparison between a classic ML method and NN methods. Its best performance is 76% (f1-score, 2*(precision*recall)/(precision+recall)).
+![KNN_Accuracy](./img/knn_76.png)
+
+
 ### NN2
 NN2 consists of 2 linear layers and is the baseline of this project. Its best performance is 81%.
-![FinalAccuracy](./img/nn2_81.png)
+![NN2_Accuracy](./img/nn2_81.png)
 
 ### NN3
 NN3 consists of 3 linear layers. Its best performance is 81%.
-![FinalAccuracy](./img/nn3_81.png)
+![NN3_Accuracy](./img/nn3_81.png)
 
 ### vgg3
 Vgg3 consists of 2 conv layers and 1 linear layer. Its best performance is 94%.
-![FinalAccuracy](./img/vgg3_94.png)
+![Vgg3_Accuracy](./img/vgg3_94.png)
 
 ### vgg5
 Vgg5 consists of 4 conv layers and 1 linear layer. Its best performance is 88%.
-![FinalAccuracy](./img/vgg5_88.png)
+![Vgg5_Accuracy](./img/vgg5_88.png)
 
 ## Futher work to improve the performance
 ### Preventing overfitting
 I consider data augmentation techniques to prvent overfitting with complex models. This is because the provided dataset is so small that the complex model can be easily overfitted to the training data. Some ways to augment the data are below.
   - use D/N/S/R: D/N/S/R can be replaced by A/T/G/C. If one instance has 3N, the instance can be augmented from 1 to 4^3. However, the features such as stop codons of each class must be considered.
   - pad and crop gene sequence: This can be used to augment data. However, the head/tail information of gene is usually critical, so I'm not sure this can be helpful.
+  - apply cross-validation: cross-validation might reduce the risk of overfitting. Although cross validation is considered expensive (for k fold, training & testing k-times), my model isn't so complicated that this can be a way to prevent overfitting.
 
 ### Adjusting data distribution
 The dataset has IE(25%), EI(25%), and N(50%). Because of its proportion, the classifier will work better with N class. To ensure the performance for all classes, it can be conducive to use same number of class instances. However, my testset is also disproportionate. So, it does not matter now.

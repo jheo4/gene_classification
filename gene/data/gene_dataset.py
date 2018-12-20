@@ -9,15 +9,16 @@ from torch.utils.data import Dataset, DataLoader
 
 
 class GeneDataset(Dataset):
-  def __init__(self, train, dim):
-    if train == True:
-      print("Prepare trainset...", end='   ')
-      self.data, _ = self.prepare_data(dim)
-      self.len = 2865
-    else:
-      print("Prepare testset...", end='   ')
-      _, self.data = self.prepare_data(dim)
-      self.len = 325
+  def __init__(self, train=True, dim=2, classic=False):
+    if classic == False:
+      if train == True:
+        print("Prepare trainset...", end='   ')
+        self.data, _ = self.prepare_data(dim)
+        self.len = 2865
+      else:
+        print("Prepare testset...", end='   ')
+        _, self.data = self.prepare_data(dim)
+        self.len = 325
     print("[finished]")
 
 
@@ -26,6 +27,8 @@ class GeneDataset(Dataset):
 
 
   def __len__(self):
+    if classic == True:
+      return 3190
     return self.len
 
 
@@ -113,6 +116,75 @@ class GeneDataset(Dataset):
     testset += Ns[N_split: ]
 
     return trainset, testset
+
+
+  def prepare_calssic_data(self):
+    raw_data_file = open("./data/splice.data", 'r')
+    EIs = []
+    EI_lables = []
+    IEs = []
+    IE_labels = []
+    Ns = []
+    N_labels = []
+    EI_split = 687
+    IE_split = 688
+    N_split = 1490
+
+    train_data = []
+    train_labels = []
+    test_data = []
+    test_labels = []
+
+    while True:
+      read_data = raw_data_file.readline()
+      if not read_data:
+        break
+      gene_value = []
+
+      for i in range(39, 99):
+        if read_data[i] == 'A':
+          gene_value.append(60)
+        elif read_data[i] == 'T':
+          gene_value.append(120)
+        elif read_data[i] == 'G':
+          gene_value.append(180)
+        elif read_data[i] == 'C':
+          gene_value.append(240)
+        else: # for D/N/S/R
+          gene_value.append(20)
+          #gene_value.append(ord(read_data[i]))
+
+      # value 0(EI) 1(IE) 2(N)
+      label = read_data.split(',')[0]
+      if label == 'EI':
+        EIs.append(gene_value)
+        EI_lables.append(0)
+      elif label == 'IE':
+        IEs.append(gene_value)
+        IE_labels.append(1)
+      elif label == 'N':
+        Ns.append(gene_value)
+        N_labels.append(2)
+
+    raw_data_file.close()
+
+    train_data += EIs[ :EI_split]
+    test_data += EIs[EI_split: ]
+    train_labels += EI_lables[ :EI_split]
+    test_labels += EI_lables[EI_split: ]
+
+    train_data += IEs[ :IE_split]
+    test_data += IEs[IE_split: ]
+    train_labels += IE_labels[ :IE_split]
+    test_labels += IE_labels[IE_split: ]
+
+    train_data += Ns[ :N_split]
+    test_data += Ns[N_split: ]
+    train_labels += N_labels[ :N_split]
+    test_labels += N_labels[N_split: ]
+
+    return train_data, train_labels, test_data, test_labels
+
 
 
 if __name__ == '__main__':

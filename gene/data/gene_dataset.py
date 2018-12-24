@@ -10,7 +10,8 @@ from torch.utils.data import Dataset, DataLoader
 
 class GeneDataset(Dataset):
   def __init__(self, train=True, dim=2, classic=False):
-    if classic == False:
+    self.is_classic = classic
+    if self.is_classic == False:
       if train == True:
         print("Prepare trainset...", end='   ')
         self.data, _ = self.prepare_data(dim)
@@ -27,7 +28,7 @@ class GeneDataset(Dataset):
 
 
   def __len__(self):
-    if classic == True:
+    if self.is_classic == True:
       return 3190
     return self.len
 

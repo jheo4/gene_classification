@@ -41,8 +41,9 @@ else:
   loss_function = torch.nn.CrossEntropyLoss()
 
 learning_rate = 0.01
-optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9,
-    weight_decay=1e-4)
+#optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9,
+#    weight_decay=1e-4)
+optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 best_performacne = {'epoch':0, 'accuracy':0}
 
 # Training

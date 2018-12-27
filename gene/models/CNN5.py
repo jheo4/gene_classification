@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-class Net(nn.Module):
+class CNN5(nn.Module):
   def __init__(self):
-    super(Net, self).__init__()
+    super(CNN5, self).__init__()
     self.c1 = nn.Conv2d(1, 16, kernel_size=3, padding=1)
     self.b1 = nn.BatchNorm2d(16)
     self.c2 = nn.Conv2d(16, 16, kernel_size=3, padding=1)

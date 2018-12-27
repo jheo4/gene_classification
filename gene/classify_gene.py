@@ -12,8 +12,9 @@ from data import gene_dataset as gd
 # select models
 from models import NN2
 from models import NN3
-from models import vgg3
-from models import vgg5
+from models import CNN3
+from models import CNN5
+from models import CNN_ONLY
 
 batch_size = 191
 trainset = gd.GeneDataset(train=True, dim=2, classic=False)
@@ -33,7 +34,7 @@ print(device)
 classes = ('EI', 'IE', 'N')
 
 # set model
-net = vgg3.Net()
+net = CNN_ONLY.CNN_ONLY()
 if torch.cuda.is_available():
   net.cuda()
   loss_function = torch.nn.CrossEntropyLoss().cuda()  # cuda

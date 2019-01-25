@@ -35,5 +35,3 @@ print()
 print("                           REPORT")
 print(classification_report(test_labels, predictions, target_names=classes))
 
-
-#print("best accuracies : %.2f" % (accuracies_k[best_practice_index]))

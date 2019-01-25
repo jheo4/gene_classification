@@ -83,6 +83,10 @@ Vgg3 consists of 2 conv layers and 1 linear layer. Its best performance is 94%.
 Vgg5 consists of 4 conv layers and 1 linear layer. Its best performance is 88%.
 ![Vgg5_Accuracy](./img/vgg5_88.png)
 
+### Only with convolutional layers
+CNN model with only convolution layers (without pooling layers btw the convolutions) showed 96% accuracy.
+![OnlyCNN_Accuracy](./img/only_cnn_96.png)
+
 ## Futher work to improve the performance
 ### Preventing overfitting
 I consider data augmentation techniques to prvent overfitting with complex models. This is because the provided dataset is so small that the complex model can be easily overfitted to the training data. Some ways to augment the data are below.

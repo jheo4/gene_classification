@@ -6,10 +6,10 @@ class CNN_ONLY(nn.Module):
     super(CNN_ONLY, self).__init__()
     self.c1 = nn.Conv2d(1, 36, kernel_size=3, padding=1)
     self.b1 = nn.BatchNorm2d(36)
-    
+
     self.c2 = nn.Conv2d(36, 24, kernel_size=1)
     self.b2 = nn.BatchNorm2d(24)
-    
+
     self.c3 = nn.Conv2d(24, 64, kernel_size=3, padding=1)
     self.b3 = nn.BatchNorm2d(64)
     self.p1 = nn.MaxPool2d(kernel_size = 2, stride=2)

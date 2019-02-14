@@ -1,4 +1,4 @@
-# KCML2_take_home_project
+# Gene Classfication
 Goal: to generate a model to classify a gene sequence into the three categories(IE/EI/N)
 Dataset by [UCI ML repo](https://archive.ics.uci.edu/ml/datasets/Molecular+Biology+%28Splice-junction+Gene+Sequences%29).
 
